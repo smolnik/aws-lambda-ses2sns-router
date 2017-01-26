@@ -10,6 +10,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
+import com.google.gson.Gson;
 
 /**
  * @author asmolnik
@@ -22,7 +23,7 @@ public class Ses2SnsRouter {
 	public void route(Map<String, Object> eventMap, Context context) {
 		LambdaLogger log = context.getLogger();
 		List<Map<String, Object>> records = getListAsValue("Records", eventMap);
-		log.log(eventMap.toString());
+		log.log(new Gson().toJson(eventMap));
 		records.forEach(m -> {
 			String source = getValue("source", getMap(m, "ses", "mail"));
 			ZonedDateTime now = Instant.now().atZone(ZoneId.systemDefault());
